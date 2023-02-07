@@ -44,7 +44,7 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
   const rosDistro = RosDistro.parse(parseYaml(rosDistroFile));
   const ros2Repos = Ros2Repos.parse(parseYaml(ros2RepoFile));
 
-  console.log(`comparing versions for ${distro}...`);
+  console.log(`Comparing versions for ${distro}...`);
   const skippedRepos: string[] = [];
   Object.entries(ros2Repos.repositories).forEach(([name, repo]) => {
     const repoName = name.split("/")[1];
@@ -70,6 +70,9 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
       "\nThe following repos were skipped - they probably don't have the same key in the ros2.repos file and in the rosdistro file:",
     );
     skippedRepos.forEach((repo) => console.log(` - ${repo}`));
+    console.log("\nHere are the URLs to the rosdistro and ros2.repos files:");
+    console.log(` - rosdistro:  ${rosDistroUrl}`);
+    console.log(` - ros2.repos: ${ros2RepoUrl}`);
   }
 }
 

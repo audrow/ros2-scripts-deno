@@ -19,7 +19,7 @@ deno run --allow-net --lock ./deno.lock main.ts <distro> # where distro is humbl
 This makes output that looks like the following:
 
 ```text
-comparing versions for humble...
+Comparing versions for humble...
  - osrf_pycommon has a version mismatch:
         2.0.2 (rosdistro)       !==     2.1.1 (ros2.repos)
 
@@ -28,6 +28,10 @@ The following repos were skipped - they probably don't have the same key in the 
  - Fast-DDS
  - ros_tutorials
  - system_tests
+
+Here are the URLs to the rosdistro and ros2.repos files:
+ - rosdistro:  https://raw.githubusercontent.com/ros/rosdistro/master/humble/distribution.yaml
+ - ros2.repos: https://raw.githubusercontent.com/ros2/ros2/humble-release/ros2.repos
 ```
 
 The lock file tells Deno to use the exact versions of the dependencies that were
