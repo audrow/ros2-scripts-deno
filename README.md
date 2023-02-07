@@ -1,1 +1,4 @@
-# ros2-scripts-deno
+# README
+
+A collection of scripts for working with ROS 2. Go into subdirectories for more
+information.
