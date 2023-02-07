@@ -33,17 +33,19 @@ const Ros2Repos = z.object({
 });
 
 export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
+  // Create URLs
   const rosDistroUrl =
     `https://raw.githubusercontent.com/ros/rosdistro/master/${distro}/distribution.yaml`;
   const ros2RepoUrl =
     `https://raw.githubusercontent.com/ros2/ros2/${distro}-release/ros2.repos`;
 
-  // get file contents
+  // Use URLs to fetch files and convert file contents into objects
   const rosDistroFile = await fetch(rosDistroUrl).then((res) => res.text());
   const ros2RepoFile = await fetch(ros2RepoUrl).then((res) => res.text());
   const rosDistro = RosDistro.parse(parseYaml(rosDistroFile));
   const ros2Repos = Ros2Repos.parse(parseYaml(ros2RepoFile));
 
+  // Printout the comparison results
   console.log(`Comparing versions for ${distro}...`);
   const skippedRepos: string[] = [];
   Object.entries(ros2Repos.repositories).forEach(([name, repo]) => {
@@ -64,7 +66,6 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
       );
     }
   });
-
   if (skippedRepos.length) {
     console.log(
       "\nThe following repos were skipped - they probably don't have the same key in the ros2.repos file and in the rosdistro file:",
