@@ -44,7 +44,7 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
   const rosDistro = RosDistro.parse(parseYaml(rosDistroFile));
   const ros2Repos = Ros2Repos.parse(parseYaml(ros2RepoFile));
 
-  console.log("comparing versions...");
+  console.log(`comparing versions for ${distro}...`);
   const skippedRepos: string[] = [];
   Object.entries(ros2Repos.repositories).forEach(([name, repo]) => {
     const repoName = name.split("/")[1];
