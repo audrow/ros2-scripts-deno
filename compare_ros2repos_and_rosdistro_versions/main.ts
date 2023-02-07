@@ -32,7 +32,7 @@ const Ros2Repos = z.object({
   ),
 });
 
-export async function compareRos2ReposAndRosdistroVersions(distro: str) {
+export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
   const rosDistroUrl =
     `https://raw.githubusercontent.com/ros/rosdistro/master/${distro}/distribution.yaml`;
   const ros2RepoUrl =
