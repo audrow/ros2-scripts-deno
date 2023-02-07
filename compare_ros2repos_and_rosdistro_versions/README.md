@@ -16,7 +16,14 @@ You can run this program with the following command:
 deno run --allow-net --lock ./deno.lock main.ts <distro> # where distro is humble, foxy, etc.
 ```
 
-This makes output that looks like the following:
+Note that you can also run this program without cloning the repository by
+pointing Deno to the URL of the file:
+
+```bash
+deno run --allow-net https://raw.githubusercontent.com/audrow/ros2-scripts-deno/main/compare_ros2repos_and_rosdistro_versions/main.ts <distro>
+```
+
+Running this program should output something like the following:
 
 ```text
 Comparing versions for humble...
