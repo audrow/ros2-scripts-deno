@@ -1,6 +1,16 @@
 import { z } from "https://deno.land/x/zod@v3.20.2/mod.ts";
 import { parse as parseYaml } from "https://deno.land/std@0.177.0/encoding/yaml.ts";
 
+const ros2ReposToSkip = [
+  "system_tests",
+];
+
+const ros2ReposToRosDistroKeyMap: { [repoName: string]: string } = {
+  "Fast-DDS": "fastrtps",
+  "Fast-CDR": "fastcdr",
+  "ros_tutorials": "turtlesim",
+};
+
 const Distro = z.enum([
   "dashing",
   "eloquent",
@@ -47,19 +57,28 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
 
   // Printout the comparison results
   console.log(`Comparing versions for ${distro}...`);
+  const reposWithNoMatchingKey: string[] = [];
   const skippedRepos: string[] = [];
   Object.entries(ros2Repos.repositories).forEach(([name, repo]) => {
     const repoName = name.split("/")[1];
+    if (ros2ReposToSkip.includes(repoName)) {
+      skippedRepos.push(repoName);
+      return;
+    }
+
+    const rosDistroRepoName = ros2ReposToRosDistroKeyMap[repoName] ?? repoName;
 
     let ros2ReposVersion = repo.version;
     if (ros2ReposVersion?.startsWith("v")) {
       ros2ReposVersion = ros2ReposVersion.slice(1);
     }
     const rosdistroVersion =
-      rosDistro.repositories[repoName]?.release?.version?.split("-")[0];
+      rosDistro.repositories[rosDistroRepoName]?.release?.version?.split(
+        "-",
+      )[0];
 
     if (!rosdistroVersion) {
-      skippedRepos.push(repoName);
+      reposWithNoMatchingKey.push(repoName);
     } else if (ros2ReposVersion !== rosdistroVersion) {
       console.log(
         ` - ${repoName} has a version mismatch:\n\t${rosdistroVersion} (rosdistro)\t!==\t${ros2ReposVersion} (ros2.repos)`,
@@ -68,9 +87,16 @@ export async function compareRos2ReposAndRosdistroVersions(distro: Distro) {
   });
   if (skippedRepos.length) {
     console.log(
-      "\nThe following repos were skipped - they probably don't have the same key in the ros2.repos file and in the rosdistro file:",
+      `\nSkipped the following repos:`,
     );
     skippedRepos.forEach((repo) => console.log(` - ${repo}`));
+  }
+
+  if (reposWithNoMatchingKey.length) {
+    console.log(
+      "\nKeys for the following repos could not be matched- they probably don't have the same key in the ros2.repos file and in the rosdistro file:",
+    );
+    reposWithNoMatchingKey.forEach((repo) => console.log(` - ${repo}`));
     console.log("\nHere are the URLs to the rosdistro and ros2.repos files:");
     console.log(` - rosdistro:  ${rosDistroUrl}`);
     console.log(` - ros2.repos: ${ros2RepoUrl}`);

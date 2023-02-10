@@ -27,18 +27,13 @@ Running this program should output something like the following:
 
 ```text
 Comparing versions for humble...
+ - Fast-DDS has a version mismatch:
+        2.6.4 (rosdistro)       !==     2.6.2 (ros2.repos)
  - osrf_pycommon has a version mismatch:
         2.0.2 (rosdistro)       !==     2.1.1 (ros2.repos)
 
-The following repos were skipped - they probably don't have the same key in the ros2.repos file and in the rosdistro file:
- - Fast-CDR
- - Fast-DDS
- - ros_tutorials
+Skipped the following repos:
  - system_tests
-
-Here are the URLs to the rosdistro and ros2.repos files:
- - rosdistro:  https://raw.githubusercontent.com/ros/rosdistro/master/humble/distribution.yaml
- - ros2.repos: https://raw.githubusercontent.com/ros2/ros2/humble-release/ros2.repos
 ```
 
 The lock file tells Deno to use the exact versions of the dependencies that were
