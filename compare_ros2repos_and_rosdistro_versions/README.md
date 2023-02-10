@@ -5,7 +5,9 @@ of packages in a ros2.repos file.
 
 ## Setup
 
-You'll need to
+You can clone this repository or run this script from a
+[Github Codespace](https://github.com/features/codespaces) (Audrow's preferred
+way). In either case, you'll need to
 [install Deno](https://deno.land/manual@v1.30.3/getting_started/installation).
 
 ## Usage
@@ -13,6 +15,7 @@ You'll need to
 You can run this program with the following command:
 
 ```bash
+# cd into this directory
 deno run --allow-net --lock ./deno.lock main.ts <distro> # where distro is humble, foxy, etc.
 ```
 
