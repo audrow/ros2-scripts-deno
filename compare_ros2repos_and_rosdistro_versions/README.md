@@ -12,6 +12,13 @@ way). In either case, you'll need to
 
 ## Usage
 
+You can view the help message by running the program with `-h` or `--help`:
+
+```bash
+# cd into this directory
+deno run main.ts -h
+```
+
 You can run this program with the following command:
 
 ```bash
@@ -19,11 +26,22 @@ You can run this program with the following command:
 deno run --allow-net --lock ./deno.lock main.ts <distro> # where distro is humble, foxy, etc.
 ```
 
+The lock file tells Deno to use the exact versions of the dependencies that were
+used when this program was last run. You may be able to run the program without
+the lock file, but it's not guaranteed to work.
+
+`--allow-net` is required because this program makes HTTP requests to GitHub to
+download the latest ROS 2 repos file and Rosdistro file.
+
+The ROS 2 repos file URL is inferred from the ROS 2 distro name. If you want to
+set the URL to the ROS 2 repos file manually, you can use the `--ros2-repos-url`
+or `-r` flag to specify a URL:
+
 Note that you can also run this program without cloning the repository by
 pointing Deno to the URL of the file:
 
 ```bash
-deno run --allow-net https://raw.githubusercontent.com/audrow/ros2-scripts-deno/main/compare_ros2repos_and_rosdistro_versions/main.ts <distro>
+deno run --allow-net https://raw.githubusercontent.com/audrow/ros2-scripts-deno/main/compare_ros2repos_and_rosdistro_versions/main.ts -h
 ```
 
 Running this program should output something like the following:
@@ -38,10 +56,3 @@ Comparing versions for humble...
 Skipped the following repos:
  - system_tests
 ```
-
-The lock file tells Deno to use the exact versions of the dependencies that were
-used when this program was last run. You may be able to run the program without
-the lock file, but it's not guaranteed to work.
-
-`--allow-net` is required because this program makes HTTP requests to GitHub to
-download the latest ROS 2 repos file and Rosdistro file.
