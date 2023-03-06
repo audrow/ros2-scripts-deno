@@ -42,24 +42,29 @@ const Ros2Repos = z.object({
   ),
 });
 
-export async function compareRos2ReposAndRosdistroVersions(
-  distro: Distro,
-  ros2RepoUrl?: string,
-) {
+export async function compareRos2ReposAndRosDistroVersions({
+  distro,
+  rosDistroUrl,
+  ros2ReposUrl,
+}: {
+  distro: Distro;
+  rosDistroUrl?: string;
+  ros2ReposUrl?: string;
+}) {
   // Create URLs
-  const rosDistroUrl =
+  rosDistroUrl = rosDistroUrl ??
     `https://raw.githubusercontent.com/ros/rosdistro/master/${distro}/distribution.yaml`;
-  ros2RepoUrl = ros2RepoUrl ??
+  ros2ReposUrl = ros2ReposUrl ??
     `https://raw.githubusercontent.com/ros2/ros2/${distro}-release/ros2.repos`;
 
   // Use URLs to fetch files and convert file contents into objects
   const rosDistroFile = await fetch(rosDistroUrl).then((res) => res.text());
-  const ros2RepoFile = await fetch(ros2RepoUrl).then((res) => res.text());
+  const ros2RepoFile = await fetch(ros2ReposUrl).then((res) => res.text());
   const rosDistro = RosDistro.parse(parseYaml(rosDistroFile), {
     path: [rosDistroUrl],
   });
   const ros2Repos = Ros2Repos.parse(parseYaml(ros2RepoFile), {
-    path: [ros2RepoUrl],
+    path: [ros2ReposUrl],
   });
 
   // Printout the comparison results
@@ -106,7 +111,7 @@ export async function compareRos2ReposAndRosdistroVersions(
     reposWithNoMatchingKey.forEach((repo) => console.log(` - ${repo}`));
     console.log("\nHere are the URLs to the rosdistro and ros2.repos files:");
     console.log(` - rosdistro:  ${rosDistroUrl}`);
-    console.log(` - ros2.repos: ${ros2RepoUrl}`);
+    console.log(` - ros2.repos: ${ros2ReposUrl}`);
   }
 }
 
@@ -118,13 +123,21 @@ if (import.meta.main) {
       "Compare the versions of the ros2.repos file and the rosdistro.",
     )
     .option(
-      "-r, --ros2-repos-url <ros2ReposUrl:string>",
+      "--ros2-repos-url <ros2ReposUrl:string>",
       "The url to the ros2.repos file.",
     )
+    .option(
+      "--ros-distro-url <rosDistroUrl:string>",
+      "The url to the rosdistro distribution file.",
+    )
     .arguments("<distro:string>")
-    .action(({ ros2ReposUrl }, ...args) => {
+    .action(({ ros2ReposUrl, rosDistroUrl }, ...args) => {
       const distro = Distro.parse(args[0]);
-      compareRos2ReposAndRosdistroVersions(distro, ros2ReposUrl);
+      compareRos2ReposAndRosDistroVersions({
+        distro,
+        ros2ReposUrl,
+        rosDistroUrl,
+      });
     })
     .parse();
 }
