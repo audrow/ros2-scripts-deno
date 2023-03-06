@@ -1,5 +1,5 @@
-import { compareRos2ReposAndRosdistroVersions } from "./main.ts";
+import { compareRos2ReposAndRosDistroVersions } from "./main.ts";
 
-Deno.test("compareRos2ReposAndRosdistroVersions runs", async () => {
-  await compareRos2ReposAndRosdistroVersions("humble");
+Deno.test("compareRos2ReposAndRosDistroVersions runs", async () => {
+  await compareRos2ReposAndRosDistroVersions({ distro: "humble" });
 });
